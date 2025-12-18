@@ -19,6 +19,14 @@ class AlohaSimEnvironment(_environment.Environment):
         np.random.seed(seed)
         self._rng = np.random.default_rng(seed)
 
+        if display:
+            try:
+                import pygame  # noqa: F401
+            except ImportError as exc:  # pragma: no cover - defensive user message
+                raise RuntimeError(
+                    "Display mode requires pygame. Install it via the Aloha Sim requirements or `pip install pygame`."
+                ) from exc
+
         render_mode = "human" if display else None
         self._gym = gymnasium.make(task, obs_type=obs_type, render_mode=render_mode)
 

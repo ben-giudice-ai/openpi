@@ -20,6 +20,10 @@ uv pip install -e packages/openpi-client
 
 # Run the simulation
 MUJOCO_GL=egl python examples/aloha_sim/main.py
+
+# If you want a visible MuJoCo window instead of headless EGL rendering, run:
+# MUJOCO_GL=glfw python examples/aloha_sim/main.py --display
+# (Display mode requires pygame; it's included in requirements.txt.)
 ```
 
 Note: If you are seeing EGL errors, you may need to install the following dependencies:

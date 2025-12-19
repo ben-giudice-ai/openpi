@@ -1,3 +1,6 @@
+import logging
+import os
+
 import gym_aloha  # noqa: F401
 import gymnasium
 import numpy as np
@@ -9,11 +12,19 @@ from typing_extensions import override
 class AlohaSimEnvironment(_environment.Environment):
     """An environment for an Aloha robot in simulation."""
 
-    def __init__(self, task: str, obs_type: str = "pixels_agent_pos", seed: int = 0) -> None:
+    def __init__(
+        self,
+        task: str,
+        obs_type: str = "pixels_agent_pos",
+        seed: int = 0,
+        render_mode: str | None = "human",
+    ) -> None:
         np.random.seed(seed)
         self._rng = np.random.default_rng(seed)
 
-        self._gym = gymnasium.make(task, obs_type=obs_type, render_mode="human")
+        render_mode = self._resolve_render_mode(render_mode)
+        self._gym = gymnasium.make(task, obs_type=obs_type, render_mode=render_mode)
+        self._render_enabled = render_mode is not None
 
         self._last_obs = None
         self._done = True
@@ -25,7 +36,7 @@ class AlohaSimEnvironment(_environment.Environment):
         self._last_obs = self._convert_observation(gym_obs)  # type: ignore
         self._done = False
         self._episode_reward = 0.0
-        self._gym.render()
+        self._render_if_needed()
 
     @override
     def is_episode_complete(self) -> bool:
@@ -44,7 +55,22 @@ class AlohaSimEnvironment(_environment.Environment):
         self._last_obs = self._convert_observation(gym_obs)  # type: ignore
         self._done = terminated or truncated
         self._episode_reward = max(self._episode_reward, reward)
-        self._gym.render()
+        self._render_if_needed()
+
+    def _render_if_needed(self) -> None:
+        if self._render_enabled:
+            self._gym.render()
+
+    @staticmethod
+    def _resolve_render_mode(render_mode: str | None) -> str | None:
+        if render_mode != "human":
+            return render_mode
+
+        if os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"):
+            return "human"
+
+        logging.warning("No DISPLAY detected; falling back to render_mode=rgb_array.")
+        return "rgb_array"
 
     def _convert_observation(self, gym_obs: dict) -> dict:
         img = gym_obs["pixels"]["top"]

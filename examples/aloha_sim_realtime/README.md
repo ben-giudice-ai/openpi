@@ -43,3 +43,6 @@ uv run scripts/serve_policy.py --env ALOHA_SIM --default-prompt "Pick up the cub
 While `main.py` is running, type a new command into the terminal and press Enter. The latest
 command is injected into each observation as `prompt` before being sent to the policy.
 If you have not typed anything yet, the `--default-prompt` (or `Args.default_prompt`) is used.
+
+If you're running headless and see GLX-related errors, use `--args.render-mode rgb_array` or set
+`MUJOCO_GL=egl`/`MUJOCO_GL=osmesa` to pick a compatible renderer.

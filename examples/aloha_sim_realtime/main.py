@@ -44,6 +44,7 @@ class Args:
     port: int = 8000
 
     default_prompt: str | None = "Pick up the cube and place it in the bowl."
+    render_mode: str | None = "human"
 
 
 def main(args: Args) -> None:
@@ -84,6 +85,7 @@ def main(args: Args) -> None:
         _env.AlohaSimEnvironment(
             task=args.task,
             seed=args.seed,
+            render_mode=args.render_mode,
         ),
         command_state,
     )

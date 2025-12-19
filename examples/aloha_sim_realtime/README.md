@@ -45,4 +45,6 @@ command is injected into each observation as `prompt` before being sent to the p
 If you have not typed anything yet, the `--default-prompt` (or `Args.default_prompt`) is used.
 
 If you're running headless and see GLX-related errors, use `--args.render-mode rgb_array` or set
-`MUJOCO_GL=egl`/`MUJOCO_GL=osmesa` to pick a compatible renderer.
+`MUJOCO_GL=egl`/`MUJOCO_GL=osmesa` to pick a compatible renderer. When `MUJOCO_GL` is set to
+`egl`/`osmesa`, this example automatically falls back to `render_mode=rgb_array` to avoid the
+glfw viewer.

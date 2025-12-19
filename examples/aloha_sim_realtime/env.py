@@ -66,14 +66,6 @@ class AlohaSimEnvironment(_environment.Environment):
         if render_mode != "human":
             return render_mode
 
-        mujoco_gl = os.environ.get("MUJOCO_GL", "").lower()
-        if mujoco_gl in {"egl", "osmesa"}:
-            logging.warning(
-                "MUJOCO_GL=%s detected; falling back to render_mode=rgb_array to avoid glfw.",
-                mujoco_gl,
-            )
-            return "rgb_array"
-
         if os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"):
             return "human"
 

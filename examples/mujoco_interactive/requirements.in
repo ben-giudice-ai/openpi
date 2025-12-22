@@ -1,0 +1,4 @@
+gymnasium[mujoco]
+mujoco
+numpy>=1.22.4,<2.0.0
+tyro
